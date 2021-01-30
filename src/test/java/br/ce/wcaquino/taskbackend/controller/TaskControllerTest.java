@@ -9,11 +9,11 @@ import br.ce.wcaquino.taskbackend.model.Task;
 import br.ce.wcaquino.taskbackend.utils.ValidationException;
 
 public class TaskControllerTest {
-	
+	final String defaultDescription = "Descrição";
+
 	@Test
 	public void naoDeveSalvarTarefaSemDescricao() {
 		Task todo = new Task();
-		//todo.setTask("Descrição");
 		todo.setDueDate(LocalDate.now());
 		TaskController controller = new TaskController();
 		try {
@@ -26,7 +26,7 @@ public class TaskControllerTest {
 	@Test
 	public void naoDeveSalvarTarefaSemData() {
 		Task todo = new Task();
-		todo.setTask("Descrição");
+		todo.setTask(defaultDescription);
 		TaskController controller = new TaskController();
 		try {
 			controller.save(todo);
@@ -38,7 +38,7 @@ public class TaskControllerTest {
 	@Test
 	public void naoDeveSalvarTarefaComDataPassada() {
 		Task todo = new Task();
-		todo.setTask("Descrição");
+		todo.setTask(defaultDescription);
 		todo.setDueDate(LocalDate.of(2010, 01, 01));
 		TaskController controller = new TaskController();
 		try {
@@ -51,7 +51,7 @@ public class TaskControllerTest {
 	@Test
 	public void DeveSalvarTarefaComSucesso() throws ValidationException {
 		Task todo = new Task();
-		todo.setTask("Descrição");
+		todo.setTask(defaultDescription);
 		todo.setDueDate(LocalDate.now());
 		TaskController controller = new TaskController();
 		controller.save(todo);
