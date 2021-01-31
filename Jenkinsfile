@@ -8,7 +8,7 @@ pipeline {
         }
         stage ('Unit Tests') {
             steps {
-                sh 'echo nao tem test'
+                sh 'mvn test'
             }
         }
         stage ('Sonar Analysis') {

@@ -4,20 +4,38 @@ import java.time.LocalDate;
 
 import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Before;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import br.ce.wcaquino.taskbackend.model.Task;
+import br.ce.wcaquino.taskbackend.repo.TaskRepo;
 import br.ce.wcaquino.taskbackend.utils.ValidationException;
 
 public class TaskControllerTest {
 	final String defaultDescription = "Descrição";
+	
+	@Mock
+	private TaskRepo taskRepo;
+	
+	@InjectMocks
+	TaskController controller = new TaskController();
+	
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+	}
 
 	@Test
 	public void naoDeveSalvarTarefaSemDescricao() {
 		Task todo = new Task();
 		todo.setDueDate(LocalDate.now());
-		TaskController controller = new TaskController();
+		
 		try {
 			controller.save(todo);
+			Assert.fail("Não deveria ter chegado nesse ponto!");
 		} catch (ValidationException e) {
 			Assert.assertEquals("Fill the task description", e.getMessage());
 		}
@@ -27,9 +45,9 @@ public class TaskControllerTest {
 	public void naoDeveSalvarTarefaSemData() {
 		Task todo = new Task();
 		todo.setTask(defaultDescription);
-		TaskController controller = new TaskController();
 		try {
 			controller.save(todo);
+			Assert.fail("Não deveria ter chegado nesse ponto!");
 		} catch (ValidationException e) {
 			Assert.assertEquals("Fill the due date", e.getMessage());
 		}
@@ -40,9 +58,9 @@ public class TaskControllerTest {
 		Task todo = new Task();
 		todo.setTask(defaultDescription);
 		todo.setDueDate(LocalDate.of(2010, 01, 01));
-		TaskController controller = new TaskController();
 		try {
 			controller.save(todo);
+			Assert.fail("Não deveria ter chegado nesse ponto!");
 		} catch (ValidationException e) {
 			Assert.assertEquals("Due date must not be in past", e.getMessage());
 		}
@@ -53,9 +71,8 @@ public class TaskControllerTest {
 		Task todo = new Task();
 		todo.setTask(defaultDescription);
 		todo.setDueDate(LocalDate.now());
-		TaskController controller = new TaskController();
 		controller.save(todo);
-
+		Mockito.verify(taskRepo).save(todo);
 	}
 
 }
